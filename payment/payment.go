@@ -7,7 +7,7 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/medivhzhan/weapp/util"
+	"weapp/util"
 )
 
 const (

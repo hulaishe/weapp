@@ -8,9 +8,9 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/medivhzhan/weapp/payment"
-	"github.com/medivhzhan/weapp/util"
-	"github.com/medivhzhan/weapp/util/ecb"
+	"weapp/payment"
+	"weapp/util"
+	"weapp/util/ecb"
 )
 
 // PaidNotify 支付结果返回数据
