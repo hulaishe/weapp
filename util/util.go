@@ -3,6 +3,7 @@ package util
 import (
 	"net/http"
 	"net/url"
+	"math/rand"
 )
 
 // TokenAPI 获取带 token 的 API 地址
@@ -25,4 +26,17 @@ func GetQuery(req *http.Request, key string) string {
 	}
 
 	return ""
+}
+
+func NonceStr(length int) string {
+	base := []byte("abcdefghijklmnopqrstuvwxyz0123456789")
+	baseLength := len(base)
+
+	var nonceStrArr []byte
+	for idx := 0; idx < length; idx++ {
+		number := rand.Intn(baseLength)
+		nonceStrArr = append(nonceStrArr, base[number])
+	}
+
+	return string(nonceStrArr)
 }

@@ -11,6 +11,7 @@ import (
 	"errors"
 	"sort"
 	"strings"
+	"weapp/util/ecb"
 )
 
 // SignByMD5 多参数通过MD5签名
@@ -18,6 +19,9 @@ func SignByMD5(data map[string]string) (string, error) {
 
 	var group []string
 	for k, v := range data {
+		if v == "" {
+			continue
+		}
 		group = append(group, k+"="+v)
 	}
 
@@ -111,6 +115,39 @@ func CBCDecrypt(ssk, data, iv string) (bts []byte, err error) {
 	}
 
 	cipher.NewCBCDecrypter(block, []byte(dIv)).CryptBlocks(ciphertext, ciphertext)
+
+	return PKCS5UnPadding(ciphertext), nil
+}
+
+// aes解密
+// @str 解密退款通知数据
+// @key 秘钥
+func AesECBDecrypt(str, key string) (plaintext []byte, err error) {
+
+	ciphertext, err := base64.StdEncoding.DecodeString(str)
+	if err != nil {
+		return
+	}
+
+	if len(ciphertext) < aes.BlockSize {
+		return nil, errors.New("cipher too short")
+	}
+	// ECB mode always works in whole blocks.
+	if len(ciphertext)%aes.BlockSize != 0 {
+		return nil, errors.New("cipher is not a multiple of the block size")
+	}
+
+	key, err = MD5(key)
+	if err != nil {
+		return
+	}
+
+	block, err := aes.NewCipher([]byte(key))
+	if err != nil {
+		return
+	}
+
+	ecb.NewECBDecrypter(block).CryptBlocks(ciphertext, ciphertext)
 
 	return PKCS5UnPadding(ciphertext), nil
 }
