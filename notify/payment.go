@@ -28,14 +28,14 @@ type PaidNotify struct {
 }
 
 // 支付回调：根据请求表单解析支付回调参数
-func ParsePaidNotify(requestBody string) (*PaidNotify, error) {
+func ParsePaidNotify(requestBody []byte) (*PaidNotify, error) {
 
-	if requestBody == "" {
+	if len(requestBody) == 0 {
 		return nil, errors.New("支付回调参数为空")
 	}
 
 	ntf := new(PaidNotify)
-	err := xml.Unmarshal([]byte(requestBody), ntf)
+	err := xml.Unmarshal(requestBody, ntf)
 	if err != nil {
 		return nil, err
 	}
@@ -86,14 +86,14 @@ type RefundedReqInfo struct {
 }
 
 // 退款回调：根据请求表单解析退款回调参数
-func ParseRefundedNotify(requestBody, key string) (*RefundedNotify, error) {
+func ParseRefundedNotify(requestBody []byte, key string) (*RefundedNotify, error) {
 
-	if requestBody == "" {
+	if len(requestBody) == 0 {
 		return nil, errors.New("支付回调参数为空")
 	}
 
 	rtf := new(RefundedNotify)
-	err := xml.Unmarshal([]byte(requestBody), rtf)
+	err := xml.Unmarshal(requestBody, rtf)
 	if err != nil {
 		return nil, err
 	}
